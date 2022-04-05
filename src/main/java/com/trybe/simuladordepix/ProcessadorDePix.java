@@ -1,8 +1,11 @@
 package com.trybe.simuladordepix;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class ProcessadorDePix {
+
+  private int valorDoPix;
 
   private final Servidor servidor;
 
@@ -21,7 +24,21 @@ public class ProcessadorDePix {
    * @throws IOException Caso aconteça algum problema relacionado à comunicação
    *                     entre o aplicativo e o servidor na nuvem.
    */
-  public void executarPix(int valor, String chave) throws ErroDePix, IOException {
-    // TODO: Implementar. 
+  public String executarPix(int valor, String chave) throws ErroDePix, IOException {
+    this.valorDoPix = valor;
+    Optional<Integer> optional = Optional.ofNullable(valorDoPix);
+    try {
+      if (optional.isPresent()) {
+        if (valorDoPix <= 0) {
+          throw  new ErroValorNaoPositivo();
+        }
+        if (chave == "") {
+          throw new ErroChaveEmBranco();
+        }
+      }
+    } catch (Exception e) {
+      return e.getMessage();
+    }
+    return Mensagens.SUCESSO;
   }
 }
