@@ -22,6 +22,6 @@ public class ProcessadorDePix {
    *                     entre o aplicativo e o servidor na nuvem.
    */
   public void executarPix(int valor, String chave) throws ErroDePix, IOException {
-    // TODO: Implementar.
+    // TODO: Implementar. 
   }
 }
