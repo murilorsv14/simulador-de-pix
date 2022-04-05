@@ -28,9 +28,8 @@ public class ProcessadorDePix {
   public String executarPix(int valor, String chave) throws ErroDePix, IOException {
 
     validarChaves(valor, chave);
-
     usarConexao();
-
+    
     return Mensagens.SUCESSO;
   }
 
@@ -45,7 +44,10 @@ public class ProcessadorDePix {
    */
   public void usarConexao() throws
       ErroDeConexao, IOException, ErroSaldoInsuficiente, ErroChaveNaoEncontrada, ErroInterno {
-    Conexao conexaoAberta = servidor.abrirConexao();
+
+    Conexao conexaoAberta = null;
+    conexaoAberta = servidor.abrirConexao();
+
     try {
       String resultOperation = conexaoAberta.enviarPix(valorDoPix, chaveDeUso);
       if (resultOperation == "sucesso") {

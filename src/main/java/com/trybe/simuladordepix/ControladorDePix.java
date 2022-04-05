@@ -22,12 +22,12 @@ public class ControladorDePix {
    */
   public String aoConfirmarPix(int valor, String chave) {
     try {
-      String retorno = processadorDePix.executarPix(valor, chave);
-      return retorno;
+      processadorDePix.executarPix(valor, chave);
+      return Mensagens.SUCESSO;
     } catch (ErroDePix e) {
       return e.getMessage();
     } catch (IOException e) {
-      return e.getMessage();
+      return Mensagens.ERRO_DE_CONEXAO;
     }
   }
 }
