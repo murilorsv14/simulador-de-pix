@@ -1,7 +1,7 @@
 package com.trybe.simuladordepix;
 
 import java.io.IOException;
-import java.util.Optional;
+// import java.util.Optional;
 
 public class ProcessadorDePix {
 
@@ -27,16 +27,9 @@ public class ProcessadorDePix {
    */
   public String executarPix(int valor, String chave) throws ErroDePix, IOException {
 
-    this.valorDoPix = valor;
-    this.chaveDeUso = chave;
-    if (valorDoPix <= 0) {
-      throw  new ErroValorNaoPositivo();
-    }
-    if (chaveDeUso.trim() == "") {
-      throw new ErroChaveEmBranco();
-    }
+    validarChaves(valor, chave);
 
-    abrirConexao();
+    usarConexao();
 
     return Mensagens.SUCESSO;
   }
@@ -50,7 +43,7 @@ public class ProcessadorDePix {
    * @throws ErroChaveNaoEncontrada erro de chave
    * @throws ErroInterno erro interno
    */
-  public void abrirConexao() throws
+  public void usarConexao() throws
       ErroDeConexao, IOException, ErroSaldoInsuficiente, ErroChaveNaoEncontrada, ErroInterno {
     Conexao conexaoAberta = servidor.abrirConexao();
     try {
@@ -67,6 +60,24 @@ public class ProcessadorDePix {
       throw new ErroInterno();
     } finally {
       servidor.abrirConexao().close();
+    }
+  }
+
+  /**
+   * Metodo para validação dos parametros recebidos pelo objeto.
+   * @author Murilo Ribeiro
+   * @throws ErroValorNaoPositivo erro de valor nao positivo
+   * @throws ErroChaveEmBranco erro de chave em branco
+   */
+  public void validarChaves(int valor, String chave) throws
+      ErroValorNaoPositivo, ErroChaveEmBranco {
+    this.valorDoPix = valor;
+    this.chaveDeUso = chave;
+    if (valorDoPix <= 0) {
+      throw  new ErroValorNaoPositivo();
+    }
+    if (chaveDeUso.trim() == "") {
+      throw new ErroChaveEmBranco();
     }
   }
 }

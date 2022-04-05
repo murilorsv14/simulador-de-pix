@@ -6,8 +6,6 @@ public class ControladorDePix {
 
   private final ProcessadorDePix processadorDePix;
 
-  private String retorno;
-
   public ControladorDePix(ProcessadorDePix processadorDePix) {
     this.processadorDePix = processadorDePix;
   }
@@ -24,12 +22,12 @@ public class ControladorDePix {
    */
   public String aoConfirmarPix(int valor, String chave) {
     try {
-      this.retorno = processadorDePix.executarPix(valor, chave);
+      String retorno = processadorDePix.executarPix(valor, chave);
+      return retorno;
     } catch (ErroDePix e) {
       return e.getMessage();
     } catch (IOException e) {
       return e.getMessage();
     }
-    return retorno;
   }
 }
