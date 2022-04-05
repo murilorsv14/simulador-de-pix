@@ -6,6 +6,7 @@ import java.util.Optional;
 public class ProcessadorDePix {
 
   private int valorDoPix;
+  private String chaveDeUso;
 
   private final Servidor servidor;
 
@@ -25,20 +26,47 @@ public class ProcessadorDePix {
    *                     entre o aplicativo e o servidor na nuvem.
    */
   public String executarPix(int valor, String chave) throws ErroDePix, IOException {
+
     this.valorDoPix = valor;
-    Optional<Integer> optional = Optional.ofNullable(valorDoPix);
-    try {
-      if (optional.isPresent()) {
-        if (valorDoPix <= 0) {
-          throw  new ErroValorNaoPositivo();
-        }
-        if (chave == "") {
-          throw new ErroChaveEmBranco();
-        }
-      }
-    } catch (Exception e) {
-      return e.getMessage();
+    this.chaveDeUso = chave;
+    if (valorDoPix <= 0) {
+      throw  new ErroValorNaoPositivo();
     }
+    if (chaveDeUso.trim() == "") {
+      throw new ErroChaveEmBranco();
+    }
+
+    abrirConexao();
+
     return Mensagens.SUCESSO;
+  }
+
+  /**
+   * Metodo para Abrir uma conexão com o servidor mockado.
+   * @author Murilo Ribeiro
+   * @throws ErroDeConexao Erro de conexao
+   * @throws IOException erro de exceção
+   * @throws ErroSaldoInsuficiente erro de saldo
+   * @throws ErroChaveNaoEncontrada erro de chave
+   * @throws ErroInterno erro interno
+   */
+  public void abrirConexao() throws
+      ErroDeConexao, IOException, ErroSaldoInsuficiente, ErroChaveNaoEncontrada, ErroInterno {
+    Conexao conexaoAberta = servidor.abrirConexao();
+    try {
+      String resultOperation = conexaoAberta.enviarPix(valorDoPix, chaveDeUso);
+      if (resultOperation == "sucesso") {
+        return;
+      }
+      if (resultOperation == "saldo_insuficiente") {
+        throw new ErroSaldoInsuficiente();
+      }
+      if (resultOperation == "chave_pix_nao_encontrada") {
+        throw new ErroChaveNaoEncontrada();
+      }
+      throw new ErroInterno();
+    } finally {
+      servidor.abrirConexao().close();
+    }
   }
 }
