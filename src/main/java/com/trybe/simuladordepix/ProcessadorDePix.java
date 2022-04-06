@@ -78,7 +78,7 @@ public class ProcessadorDePix {
     if (valorDoPix <= 0) {
       throw  new ErroValorNaoPositivo();
     }
-    if (chaveDeUso.trim() == "") {
+    if (chaveDeUso.isBlank()) {
       throw new ErroChaveEmBranco();
     }
   }
